@@ -35,14 +35,13 @@ jobs:
       - name: Build firmware
         run: qmk compile -kb brian70/spade_65 -km default
 
-      - name: List build output
-        run: ls -lh .build/
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: brian70_spade_65_default
-          path: .build/brian70_spade_65_default.*
+          path: |
+            .build/brian70_spade_65_default.bin
+            .build/brian70_spade_65_default.hex
           if-no-files-found: error
 
   release:
@@ -67,4 +66,6 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           name: ${{ steps.tag.outputs.tag }}
-          files: firmware/*
+          files: |
+            firmware/brian70_spade_65_default.bin
+            firmware/brian70_spade_65_default.hex
