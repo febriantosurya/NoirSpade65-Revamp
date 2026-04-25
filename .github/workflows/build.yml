@@ -26,14 +26,14 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi
 
-      - name: Install QMK CLI
-        run: pip3 install --upgrade qmk
-
-      - name: Set up QMK
-        run: qmk setup -H "$(pwd)" --yes
+      - name: Install Python dependencies
+        run: pip3 install -r requirements.txt
 
       - name: Build firmware
-        run: qmk compile -kb brian70/spade_65 -km default
+        run: make brian70/spade_65:default
+
+      - name: List build output
+        run: ls -lh .build/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
