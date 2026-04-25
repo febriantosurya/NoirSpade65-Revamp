@@ -102,6 +102,9 @@ tags
 !docs/public/**.jpg
 !docs/public/**.jpeg
 !docs/public/**.png
+!keyboards/brian70/spade_65/docs/assets/**.jpg
+!keyboards/brian70/spade_65/docs/assets/**.jpeg
+!keyboards/brian70/spade_65/docs/assets/**.png
 
 # Things Travis sees
 /.vs
