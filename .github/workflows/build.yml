@@ -10,6 +10,7 @@ on:
     paths:
       - 'keyboards/brian70/spade_65/**'
       - '.github/workflows/build.yml'
+  workflow_dispatch:
 
 jobs:
   build:
