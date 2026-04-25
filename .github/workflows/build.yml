@@ -1,0 +1,34 @@
+name: Build Spade 65
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'keyboards/brian70/spade_65/**'
+      - '.github/workflows/build.yml'
+  pull_request:
+    paths:
+      - 'keyboards/brian70/spade_65/**'
+      - '.github/workflows/build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up QMK
+        uses: qmk/qmk-github-actions/setup@v3
+
+      - name: Build firmware
+        run: qmk compile -kb brian70/spade_65 -km default
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: brian70_spade_65_default
+          path: .build/brian70_spade_65_default.*
+          if-no-files-found: error

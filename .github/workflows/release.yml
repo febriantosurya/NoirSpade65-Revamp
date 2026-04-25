@@ -1,0 +1,32 @@
+name: Release Spade 65
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up QMK
+        uses: qmk/qmk-github-actions/setup@v3
+
+      - name: Build firmware
+        run: qmk compile -kb brian70/spade_65 -km default
+
+      - name: Generate release tag
+        id: tag
+        run: echo "tag=v$(date +%Y.%m.%d)-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          files: .build/brian70_spade_65_default.*
