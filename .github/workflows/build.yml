@@ -1,15 +1,6 @@
 name: Build Spade 65
 
 on:
-  push:
-    branches: [master, main]
-    paths:
-      - 'keyboards/brian70/spade_65/**'
-      - '.github/workflows/build.yml'
-  pull_request:
-    paths:
-      - 'keyboards/brian70/spade_65/**'
-      - '.github/workflows/build.yml'
   workflow_dispatch:
 
 jobs:
