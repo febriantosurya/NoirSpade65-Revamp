@@ -21,8 +21,16 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi
+
+      - name: Install QMK CLI
+        run: pip3 install --upgrade qmk
+
       - name: Set up QMK
-        uses: qmk/qmk-github-actions/setup@v3
+        run: qmk setup -H "$(pwd)" --yes
 
       - name: Build firmware
         run: qmk compile -kb brian70/spade_65 -km default
@@ -33,3 +41,27 @@ jobs:
           name: brian70_spade_65_default
           path: .build/brian70_spade_65_default.*
           if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: brian70_spade_65_default
+          path: firmware
+
+      - name: Generate release tag
+        id: tag
+        run: echo "tag=v$(date +%Y.%m.%d)-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          files: firmware/*
